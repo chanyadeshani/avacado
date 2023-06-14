@@ -2,7 +2,8 @@
 
 import pandas as pd
 import os
-from dash import Dash, dcc, html
+from dash import Dash, dcc, html, dash_table
+
 import json
 
 data = '''{
@@ -649,7 +650,17 @@ app.layout = html.Div(
                 },
             },
         ),
-        
+        dash_table.DataTable(
+            id="table",
+            columns=[{"name": col, "id": col} for col in df.columns[:2]],  # Only display first two columns
+            data=df.to_dict("records"), 
+            style_table={"width": "80%"},
+            style_cell={
+                "maxWidth": "20px",  # Limiting cell width to 20 characters
+                "overflow": "hidden",
+                "textOverflow": "ellipsis",
+            },
+        ),
     ]
 )
 if __name__ == "__main__":
