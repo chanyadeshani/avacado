@@ -3,8 +3,9 @@
 import pandas as pd
 import os
 from dash import Dash, dcc, html
+import json
 
-data = {
+data = '''{
   "reviews": [
     {
       "Review": "All good(Smiling face with sunglasses).",
@@ -611,10 +612,15 @@ data = {
     "coming soon..."
   ]
 }
+'''
 
 
 dict = json.loads(data)
-data = json_normalize(dict['technologies']) 
+# Extract the "reviews" data
+reviews_data = dict["reviews"]
+
+# Convert to Pandas DataFrame
+df = pd.DataFrame(reviews_data)
 
 app = Dash(__name__)
 
@@ -630,8 +636,8 @@ app.layout = html.Div(
             figure={
                 "data": [
                     {
-                        "x": data["valence_score"],
-                        "y": data["arousal_score"],
+                        "x": df["valence_score"],
+                        "y": df["arousal_score"],
                         "mode": "markers",
                     },
                 ],
