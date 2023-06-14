@@ -50,4 +50,4 @@ app.layout = html.Div(
 )
 if __name__ == "__main__":
     PORT = os.getenv('PORT', 8050)
-    app.run_server(debug=True, port=PORT, host=0.0.0.0)
+    app.run_server(debug=True, port=PORT, host="0.0.0.0")
