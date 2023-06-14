@@ -1,6 +1,7 @@
 # app.py
 
 import pandas as pd
+import os
 from dash import Dash, dcc, html
 
 data = (
@@ -48,4 +49,5 @@ app.layout = html.Div(
     ]
 )
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    PORT = os.getenv('PORT', 8050)
+    app.run_server(debug=True, port=PORT)
