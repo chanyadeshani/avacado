@@ -79,7 +79,7 @@ app.layout = html.Div(
         dcc.Graph(id='graph'),
         dash_table.DataTable(
             id='table1',
-            columns=[{'name' :"Review", 'id' :"Review"},{'name' :"similarity", 'id' :"similarity"},{'name' :"valence_score", 'id' :"valence_score"},{'name' :"arousal_score", 'id' :"arousal_score"}],  # Only display first two columns
+            columns=[{'name' :"Review", 'id' :"Review"},{'name' :"similarity", 'id' :"similarity"}],  # Only display first two columns
             data=[],
             style_table={'width': '80%'},
             style_cell={
