@@ -625,6 +625,7 @@ df = pd.DataFrame(reviews_data)
 app = Dash(__name__)
 
 app.layout = html.Div(
+        style={ "justify-content": "center"},  # Center the graph horizontally
     children=[
         html.H1(children="National Student Suervey"),
         html.P(
@@ -641,7 +642,11 @@ app.layout = html.Div(
                         "mode": "markers",
                     },
                 ],
-                "layout": {"title": "Valance and Arousal"},
+                "layout": {
+                    "title": "Valence and Arousal",
+                    "width": 800,  # Set the width of the figure
+                    "height": 500,  # Set the height of the figure
+                },
             },
         ),
         
