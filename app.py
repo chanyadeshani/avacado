@@ -31,7 +31,8 @@ def make_api_request(query):
 
 @app.callback(
     [dash.dependencies.Output('graph', 'figure'),
-     dash.dependencies.Output('table1', 'data')],
+     dash.dependencies.Output('table1', 'data'),
+     dash.dependencies.Output('table1', 'columns')],
     [dash.dependencies.Input('submit-button', 'n_clicks')],
     [dash.dependencies.State('input1', 'value')]
 )
@@ -62,12 +63,13 @@ def handle_button_click(n_clicks, input_value):
                         'height': 500,  # Set the height of the figure
                     },
                 },
-                df.to_dict('records')
+                df.to_dict('records'),
+                [{"name": col, "id": col} for col in df.columns[:2]]
             )
         else:
-            return {}, []
+            return {}, [],[]
     else:
-        return {}, []
+        return {}, [],[]
 
 app.layout = html.Div(
     #style={'justify-content': 'center'},  # Center the graph horizontally
@@ -79,7 +81,7 @@ app.layout = html.Div(
         dcc.Graph(id='graph'),
         dash_table.DataTable(
             id='table1',
-            columns=[{'name' :"Review", 'id' :"Review"},{'name' :"similarity", 'id' :"similarity"}],  # Only display first two columns
+            columns=[],  # Only display first two columns
             data=[],
             style_table={'width': '80%'},
             style_cell={
