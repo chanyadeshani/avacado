@@ -94,11 +94,13 @@ app.layout = html.Div(
             id='table1',
             columns=[],  # Only display first two columns
             data=[],
-            style_table={'width': '80%'},
+            style_table={'width': '98%'},
             style_cell={
-                'maxWidth': '50px',  # Limiting cell width to 20 characters
-                'overflow': 'hidden',
-                'textOverflow': 'ellipsis',
+                'whiteSpace' : 'normal',
+                'height': 'auto'
+                #'maxWidth': '50px',  # Limiting cell width to 20 characters
+                #'overflow': 'hidden',
+                #'textOverflow': 'ellipsis',
             },
         ),
     ]
