@@ -231,7 +231,7 @@ app.layout = html.Div(
             id='table1',
             columns=[],  # Only display first two columns
             data=[],
-            style_table={'width': '98%', 'marginLeft': '30px','marginRight': '30px'},
+            style_table={'width': '95%', 'marginLeft': '30px','marginRight': '30px'},
             style_cell={
                 'whiteSpace': 'normal',
                 'height': 'auto',
