@@ -90,10 +90,89 @@ def handle_button_click(n_clicks, input_value, slider_value):
                                     'title': 'Arousal Score'
                                 },
                                 'annotations': [
-                                    # Annotations code here
-                                ]
-                            }
-                        },
+                                {
+                                    'x': 1,  # X-coordinate of the annotation
+                                    'y': 0,  # Y-coordinate of the annotation
+                                    'text': 'Happy',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'green',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': 1,  # X-coordinate of the annotation
+                                    'y': 1,  # Y-coordinate of the annotation
+                                    'text': 'Excited',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'orange',  # Color of the text
+                                        'size': 14  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': -1,  # X-coordinate of the annotation
+                                    'y': 0,  # Y-coordinate of the annotation
+                                    'text': 'Sad',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'grey',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': 0,  # X-coordinate of the annotation
+                                    'y': 1,  # Y-coordinate of the annotation
+                                    'text': 'Suprise',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'purple',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': -1,  # X-coordinate of the annotation
+                                    'y': 1,  # Y-coordinate of the annotation
+                                    'text': 'Angry',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'red',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': -1,  # X-coordinate of the annotation
+                                    'y': -1,  # Y-coordinate of the annotation
+                                    'text': 'Depressed',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'black',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': 1,  # X-coordinate of the annotation
+                                    'y': -1,  # Y-coordinate of the annotation
+                                    'text': 'Relaxed',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'blue',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                                {
+                                    'x': 0,  # X-coordinate of the annotation
+                                    'y': -1,  # Y-coordinate of the annotation
+                                    'text': 'Quiet',  # Text to display as the label
+                                    'showarrow': False,  # Hide the arrow
+                                    'font': {
+                                        'color': 'sand',  # Color of the text
+                                        'size': 12  # Size of the text
+                                    }
+                                },
+                        ]
+                    }
+                },
                         df.to_dict('records'),
                         [{"name": col, "id": col} for col in df.columns[:2]],
                         False  # Enable the submit button
