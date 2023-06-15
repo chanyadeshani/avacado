@@ -7,6 +7,8 @@ import dash
 from dash import dash_table
 from dash import dcc
 from dash import html
+#import dash_bootstrap_components as dbc
+
 
 app = dash.Dash(__name__)
 
@@ -17,7 +19,7 @@ df = pd.DataFrame()  # Initialize an empty DataFrame
 def make_api_request(query):
     payload = {
         'query': query,
-        'top_n': 10,
+        'top_n': 30,
         'threshold': 0.75
     }
     response = requests.post(url, json=payload)
@@ -55,6 +57,8 @@ def handle_button_click(n_clicks, input_value):
                             'x': df['valence_score'],
                             'y': df['arousal_score'],
                             'mode': 'markers',
+                            'hovertext': df['Review'],
+                            'hoverinfo': df['Review'],
                         },
                     ],
                     'layout': {
@@ -72,7 +76,6 @@ def handle_button_click(n_clicks, input_value):
         return {}, [],[]
 
 app.layout = html.Div(
-    #style={'justify-content': 'center'},  # Center the graph horizontally
     children=[
         html.H1(children='National Student Survey'),
         html.H2(children='Analysis of student comments'),
@@ -85,12 +88,11 @@ app.layout = html.Div(
             data=[],
             style_table={'width': '80%'},
             style_cell={
-                'maxWidth': '20px',  # Limiting cell width to 20 characters
+                'maxWidth': '50px',  # Limiting cell width to 20 characters
                 'overflow': 'hidden',
                 'textOverflow': 'ellipsis',
             },
         ),
-        #dash_table.DataTable([{"data": "Value1"},{"data": "Value2"},{"data": "Value3"}], [{"name": "Data", "id": "data"}]),
     ]
 )
 
