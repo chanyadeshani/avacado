@@ -11,7 +11,6 @@ import plotly.graph_objects as go
 
 #import dash_bootstrap_components as dbc
 
-
 app = dash.Dash(__name__)
 
 # Define the API endpoint URL
@@ -97,7 +96,8 @@ app.layout = html.Div(
             style_table={'width': '98%'},
             style_cell={
                 'whiteSpace' : 'normal',
-                'height': 'auto'
+                'height': 'auto',
+                'text-align': 'left'
                 #'maxWidth': '50px',  # Limiting cell width to 20 characters
                 #'overflow': 'hidden',
                 #'textOverflow': 'ellipsis',
@@ -105,7 +105,6 @@ app.layout = html.Div(
         ),
     ]
 )
-
 
 if __name__ == '__main__':
     PORT = os.getenv('PORT', 8050)
