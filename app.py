@@ -7,6 +7,8 @@ import dash
 from dash import dash_table
 from dash import dcc
 from dash import html
+import plotly.graph_objects as go
+
 #import dash_bootstrap_components as dbc
 
 
@@ -65,7 +67,7 @@ def handle_button_click(n_clicks, input_value):
                         'title': 'Valence and Arousal',
                         'width': 800,  # Set the width of the figure
                         'height': 500,  # Set the height of the figure
-                    },
+                    }
                 },
                 df.to_dict('records'),
                 [{"name": col, "id": col} for col in df.columns[:2]]
@@ -74,14 +76,20 @@ def handle_button_click(n_clicks, input_value):
             return {}, [],[]
     else:
         return {}, [],[]
-
+def blank_fig():
+    fig = go.Figure(go.Scatter(x=[], y = []))
+    fig.update_layout(template = None)
+    fig.update_xaxes(showgrid = False, showticklabels = False, zeroline=False)
+    fig.update_yaxes(showgrid = False, showticklabels = False, zeroline=False)
+    
+    return fig
 app.layout = html.Div(
     children=[
         html.H1(children='National Student Survey'),
         html.H2(children='Analysis of student comments'),
         dcc.Input(id='input1', type='text', placeholder='Enter your question', style={'marginRight': '10px'}),
         html.Button('Submit', id='submit-button', n_clicks=0),
-        dcc.Graph(id='graph'),
+        dcc.Graph(id='graph',  figure = blank_fig()),
         dash_table.DataTable(
             id='table1',
             columns=[],  # Only display first two columns
