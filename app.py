@@ -92,7 +92,7 @@ def handle_button_click(n_clicks, input_value, slider_value):
                                 'annotations': [
                                 {
                                     'x': 1.25,  # X-coordinate of the annotation
-                                    'y': 0.2,  # Y-coordinate of the annotation
+                                    'y': 0.1,  # Y-coordinate of the annotation
                                     'text': 'Happy',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
@@ -112,7 +112,7 @@ def handle_button_click(n_clicks, input_value, slider_value):
                                 },
                                 {
                                     'x': -1.25,  # X-coordinate of the annotation
-                                    'y': 0.2,  # Y-coordinate of the annotation
+                                    'y': 0.1,  # Y-coordinate of the annotation
                                     'text': 'Sad',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
@@ -121,7 +121,7 @@ def handle_button_click(n_clicks, input_value, slider_value):
                                     }
                                 },
                                 {
-                                    'x': 0,  # X-coordinate of the annotation
+                                    'x': 0.15,  # X-coordinate of the annotation
                                     'y': 1.25,  # Y-coordinate of the annotation
                                     'text': 'Suprise',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
@@ -161,7 +161,7 @@ def handle_button_click(n_clicks, input_value, slider_value):
                                     }
                                 },
                                 {
-                                    'x': 0,  # X-coordinate of the annotation
+                                    'x': 0.1,  # X-coordinate of the annotation
                                     'y': -1.25,  # Y-coordinate of the annotation
                                     'text': 'Quiet',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
