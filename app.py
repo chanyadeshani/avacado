@@ -212,8 +212,8 @@ app.layout = html.Div(
                 dcc.Input(
                     id='passcode',
                     type='text',
-                    placeholder='Enter the passcode',
-                    style={'marginRight': '10px', 'width': '500px', 'height': '30px'}
+                    placeholder='Passcode Here',
+                    style={'marginBottom': '30px', 'width': '100px', 'height': '30px'}
                 ),
             ]
         ),
@@ -224,7 +224,7 @@ app.layout = html.Div(
                     id='input1',
                     type='text',
                     placeholder='Enter your question',
-                    style={'marginBottom': '10px', 'width': '500px', 'height': '30px'}
+                    style={'marginRight': '10px', 'width': '500px', 'height': '30px'}
                 ),
                 daq.Slider(
                     id='slider1',
