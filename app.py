@@ -45,7 +45,7 @@ def make_api_request(query, noReviews):
     ],
     [
         dash.dependencies.Input('submit-button', 'n_clicks'),
-        dash.dependencies.Input('input1', 'value'),
+        dash.dependencies.Input('questions_dropdown', 'value'),
     ],
     [
         dash.dependencies.State('slider1', 'value'),
@@ -53,20 +53,18 @@ def make_api_request(query, noReviews):
 
     ]
 )
-def handle_button_click(n_clicks, input_value, slider_value, passcode_value):
+def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passcode_value):
     ctx = dash.callback_context
-    print('Button click')
 
     if ctx.triggered:
         prop_id = ctx.triggered[0]['prop_id']
 
         if 'submit-button' in prop_id:
-            print('prop_id',prop_id, passcode_value)
+            print('prop_id',prop_id, passcode_value,)
 
-            if n_clicks is not None and n_clicks > 0 and input_value and passcode_value == 'nss23@RCU':
-                print('Calling API')
+            if n_clicks is not None and n_clicks > 0 and questions_dropdown_value and passcode_value == 'nss23@RCU':
                 # Call the make_api_request function with the input value
-                api_response = make_api_request(input_value, slider_value)
+                api_response = make_api_request(questions_dropdown_value, slider_value)
 
                 if api_response is not None:
                     # Extract the first child of the JSON object
@@ -188,7 +186,7 @@ def handle_button_click(n_clicks, input_value, slider_value, passcode_value):
                     return blank_fig(), [], [], True  # Disable the submit button
 
     # Disable the submit button if the input value is empty
-    return blank_fig(), [], [], not bool(input_value)
+    return blank_fig(), [], [], not bool(questions_dropdown_value)
 
 def blank_fig():
     fig = go.Figure(go.Scatter(x=[], y = []))
@@ -206,26 +204,39 @@ app.layout = html.Div(
                 html.H2(children='Analysis of student comments'),
             ]
         ),
+        dcc.Input(
+            id='passcode',
+            type='text',
+            placeholder='Passcode Here',
+            style={'marginBottom': '30px','marginLeft': '400px', 'width': '100px', 'height': '30px'}
+        ),
         html.Div(
-            style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'margin': '0 20px'},
+            style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'marginLeft': '300px','marginBottom': '50px',},
             children=[
-                dcc.Input(
-                    id='passcode',
-                    type='text',
-                    placeholder='Passcode Here',
-                    style={'marginBottom': '30px', 'width': '100px', 'height': '30px'}
+                dcc.Dropdown(
+                    options=['School of arts', 'Gloucestershire business school', 'School of computing and engineering',
+                             'School of creative industries', 'School of education and humanities',
+                             'School of health and social care', 'School of natural, social and sport science',
+                             'Countryside and community research institute'],
+                    value='School of arts',
+                    id='school_dropdown',
+                    style={'width': '40%'}
+                ),
+                dcc.Dropdown(
+                    options=['Subject 1', 'Subject 2', 'Subject 3'],
+                    value='Subject 1',
+                    id='subject_dropdown',
+                    style={'width': '40%'}
                 ),
             ]
         ),
         html.Div(
             style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'margin': '0 20px'},
             children=[
-                dcc.Input(
-                    id='input1',
-                    type='text',
-                    placeholder='Enter your question',
-                    style={'marginRight': '10px', 'width': '500px', 'height': '30px'}
-                ),
+                dcc.Dropdown(['Teaching on my course', 'Learning opportunities', 'Assessment and feedback','Academic support',
+                             'Organisation and management','Learning resources', 'Student Voice'], 'Teaching on my course', 
+                             id='questions_dropdown',
+                             style={'width': '40%'}),
                 daq.Slider(
                     id='slider1',
                     min=0,
