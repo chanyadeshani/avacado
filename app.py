@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import dash_daq as daq
 
 
+
 #import dash_bootstrap_components as dbc
 
 app = dash.Dash(__name__)
@@ -44,20 +45,26 @@ def make_api_request(query, noReviews):
     ],
     [
         dash.dependencies.Input('submit-button', 'n_clicks'),
-        dash.dependencies.Input('input1', 'value')
+        dash.dependencies.Input('input1', 'value'),
     ],
     [
-        dash.dependencies.State('slider1', 'value')
+        dash.dependencies.State('slider1', 'value'),
+        dash.dependencies.State('passcode', 'value')
+
     ]
 )
-def handle_button_click(n_clicks, input_value, slider_value):
+def handle_button_click(n_clicks, input_value, slider_value, passcode_value):
     ctx = dash.callback_context
+    print('Button click')
 
     if ctx.triggered:
         prop_id = ctx.triggered[0]['prop_id']
 
         if 'submit-button' in prop_id:
-            if n_clicks is not None and n_clicks > 0 and input_value:
+            print('prop_id',prop_id, passcode_value)
+
+            if n_clicks is not None and n_clicks > 0 and input_value and passcode_value == 'nss23@RCU':
+                print('Calling API')
                 # Call the make_api_request function with the input value
                 api_response = make_api_request(input_value, slider_value)
 
@@ -203,10 +210,21 @@ app.layout = html.Div(
             style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'margin': '0 20px'},
             children=[
                 dcc.Input(
+                    id='passcode',
+                    type='text',
+                    placeholder='Enter the passcode',
+                    style={'marginRight': '10px', 'width': '500px', 'height': '30px'}
+                ),
+            ]
+        ),
+        html.Div(
+            style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'margin': '0 20px'},
+            children=[
+                dcc.Input(
                     id='input1',
                     type='text',
                     placeholder='Enter your question',
-                    style={'marginRight': '10px', 'width': '500px', 'height': '30px'}
+                    style={'marginBottom': '10px', 'width': '500px', 'height': '30px'}
                 ),
                 daq.Slider(
                     id='slider1',
