@@ -208,10 +208,10 @@ app.layout = html.Div(
             id='passcode',
             type='text',
             placeholder='Passcode Here',
-            style={'marginBottom': '30px','marginLeft': '400px', 'width': '100px', 'height': '30px'}
+            style={'marginBottom': '30px','marginLeft': '360px', 'width': '100px', 'height': '30px'}
         ),
         html.Div(
-            style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'marginLeft': '300px','marginBottom': '50px',},
+            style={'display': 'flex', 'align-items': 'center', 'justify-content': 'center', 'marginLeft': '200px','marginBottom': '50px',},
             children=[
                 dcc.Dropdown(
                     options=['School of arts', 'Gloucestershire business school', 'School of computing and engineering',
