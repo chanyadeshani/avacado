@@ -91,7 +91,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
                     percentage_nh = len(df[(df['valence_score'] < 0) & (df['arousal_score'] > 0)]) / len(df)
                     df_oct.loc[3] = ['Negative-High', percentage_nh * 100]
                     percentage_nh = len(df[(df['valence_score'] == 0)]) / len(df)
-                    df_oct.loc[3] = ['Neutral', percentage_nh * 100]
+                    df_oct.loc[4] = ['Neutral', percentage_nh * 100]
 
 
                     return (
