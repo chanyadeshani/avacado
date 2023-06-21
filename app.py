@@ -41,7 +41,12 @@ def make_api_request(query, noReviews):
         dash.dependencies.Output('graph', 'figure'),
         dash.dependencies.Output('table1', 'data'),
         dash.dependencies.Output('table1', 'columns'),
-        dash.dependencies.Output('submit-button', 'disabled')
+        dash.dependencies.Output('table2', 'data'),
+        dash.dependencies.Output('table2', 'columns'),
+        dash.dependencies.Output('submit-button', 'disabled'),
+        dash.dependencies.Output('table1_title', 'hidden'),
+        dash.dependencies.Output('table2_title', 'hidden')
+
     ],
     [
         dash.dependencies.Input('submit-button', 'n_clicks'),
@@ -72,6 +77,22 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
 
                     # Convert the first child to a DataFrame
                     df = pd.DataFrame(reviews_data)
+                    df_oct = pd.DataFrame(columns=['Quadrants', 'Percentage'], index=range(5))
+                    # Separate V-A scores to Quadrants
+                    percentage_ph = len(df[(df['valence_score'] > 0) & (df['arousal_score'] >= 0)]) / len(df)
+                    df_oct.loc[0] = ['Positive-High', percentage_ph * 100]
+
+                    percentage_pl = len(df[(df['valence_score'] > 0) & (df['arousal_score'] < 0)]) / len(df)
+                    df_oct.loc[1] = ['Positive-Low', percentage_pl * 100]
+
+                    percentage_nl = len(df[(df['valence_score'] < 0) & (df['arousal_score'] < 0)]) / len(df)
+                    df_oct.loc[2] = ['Negative-Low', percentage_nl * 100]
+
+                    percentage_nh = len(df[(df['valence_score'] < 0) & (df['arousal_score'] > 0)]) / len(df)
+                    df_oct.loc[3] = ['Negative-High', percentage_nh * 100]
+                    percentage_nh = len(df[(df['valence_score'] == 0)]) / len(df)
+                    df_oct.loc[3] = ['Neutral', percentage_nh * 100]
+
 
                     return (
                         {
@@ -178,15 +199,19 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
                         ]
                     }
                 },
+                        df_oct.to_dict('records'),
+                        [{"name": col, "id": col} for col in df_oct.columns[:2]],
                         df.to_dict('records'),
                         [{"name": col, "id": col} for col in df.columns[:2]],
-                        False  # Enable the submit button
+                        False,  # Enable the submit button
+                        False,
+                        False
                     )
                 else:
-                    return blank_fig(), [], [], True  # Disable the submit button
+                    return blank_fig(), [], [],[], [], True,True,True  # Disable the submit button
 
     # Disable the submit button if the input value is empty
-    return blank_fig(), [], [], not bool(questions_dropdown_value)
+    return blank_fig(), [],[], [], [], not bool(questions_dropdown_value),True,True
 
 def blank_fig():
     fig = go.Figure(go.Scatter(x=[], y = []))
@@ -256,9 +281,22 @@ app.layout = html.Div(
                 dcc.Graph(id='graph', figure=blank_fig(), style={'width': '800px', 'height': '500px'})
             ]
         ),
+        html.H3(children='Percentage of reviews in each Quadrant',hidden = True, id = 'table1_title'),
         dash_table.DataTable(
             id='table1',
-            columns=[],  # Only display first two columns
+            columns=[],  
+            data=[],
+            style_table={'width': '95%', 'marginLeft': '30px','marginRight': '30px'},
+            style_cell={
+                'whiteSpace': 'normal',
+                'height': 'auto',
+                'text-align': 'left'
+            },            
+        ),
+        html.H3(children="Reviews and it's similarity to the categoty selected",hidden = True, id = 'table2_title'),
+        dash_table.DataTable(
+            id='table2',
+            columns=[],
             data=[],
             style_table={'width': '95%', 'marginLeft': '30px','marginRight': '30px'},
             style_cell={
