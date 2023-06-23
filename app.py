@@ -384,7 +384,7 @@ app.layout = html.Div(
             ]
         ),
         html.H3(children='Percentage of reviews in each quadrant',
-                hidden=True, id='table1_title'),
+                hidden=True, id='table1_title',style={'margin-left': '30px'}),
         dash_table.DataTable(
             id='table1',
             columns=[],
@@ -398,7 +398,7 @@ app.layout = html.Div(
             },
         ),
         html.H3(children="Reviews and it's similarity to the category selected",
-                hidden=True, id='table2_title'),
+                hidden=True, id='table2_title',style={'margin-left': '30px'}),
         dash_table.DataTable(
             id='table2',
             columns=[],
