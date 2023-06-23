@@ -65,9 +65,8 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
         prop_id = ctx.triggered[0]['prop_id']
 
         if 'submit-button' in prop_id:
-            print('prop_id',prop_id, passcode_value,)
 
-            if n_clicks is not None and n_clicks > 0 and questions_dropdown_value and passcode_value == 'nss23@RCU':
+            if n_clicks is not None and n_clicks > 0 and questions_dropdown_value and passcode_value == 'nss23@UOG':
                 # Call the make_api_request function with the input value
                 api_response = make_api_request(questions_dropdown_value, slider_value)
 
@@ -75,23 +74,26 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
                     # Extract the first child of the JSON object
                     reviews_data = api_response.get('reviews', [])
 
+
                     # Convert the first child to a DataFrame
                     df = pd.DataFrame(reviews_data)
+                    # Create a new column 'Review_trimmed' with trimmed text if length is greater than 100, else use the original text
+                    df['Review_trimmed'] = df['Review'].apply(lambda x: x[:120] + '...' if len(x) > 120 else x)
                     df_oct = pd.DataFrame(columns=['Quadrants', 'Percentage'], index=range(5))
                     # Separate V-A scores to Quadrants
                     percentage_ph = len(df[(df['valence_score'] > 0) & (df['arousal_score'] >= 0)]) / len(df)
-                    df_oct.loc[0] = ['Positive-High', percentage_ph * 100]
+                    df_oct.loc[0] = ['Awesome (Positive feeling with High intensity)', str(round(percentage_ph * 100))+'%']
 
                     percentage_pl = len(df[(df['valence_score'] > 0) & (df['arousal_score'] < 0)]) / len(df)
-                    df_oct.loc[1] = ['Positive-Low', percentage_pl * 100]
+                    df_oct.loc[1] = ['Okay (Positive feeling with Low intensity)', str(round(percentage_pl * 100))+'%']
 
                     percentage_nl = len(df[(df['valence_score'] < 0) & (df['arousal_score'] < 0)]) / len(df)
-                    df_oct.loc[2] = ['Negative-Low', percentage_nl * 100]
+                    df_oct.loc[2] = ['Unsatisfactory (Negative feeling with Low intensity)', str(round(percentage_nl * 100))+'%']
 
                     percentage_nh = len(df[(df['valence_score'] < 0) & (df['arousal_score'] > 0)]) / len(df)
-                    df_oct.loc[3] = ['Negative-High', percentage_nh * 100]
+                    df_oct.loc[3] = ['Terrible (Negative feeling with High intensity)', str(round(percentage_nh * 100))+'%']
                     percentage_nh = len(df[(df['valence_score'] == 0)]) / len(df)
-                    df_oct.loc[4] = ['Neutral', percentage_nh * 100]
+                    df_oct.loc[4] = ['Neutral', str(round(percentage_nh * 100))+'%']
 
 
                     return (
@@ -101,99 +103,61 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
                                     'x': df['valence_score'],
                                     'y': df['arousal_score'],
                                     'mode': 'markers',
-                                    'hovertext': df['Review'],
-                                    'hoverinfo': df['Review'],
+                                    'hovertext': df['Review_trimmed'],
+                                    'hoverinfo': df['Review_trimmed'],
                                 },
                             ],
                             'layout': {
-                                'title': 'Valence and Arousal',
+                                'title': 'Feeling and Intensity',
                                 'width': 800,  # Set the width of the figure
                                 'height': 500,  # Set the height of the figure
                                 'xaxis': {
-                                    'title': 'Valence Score'
+                                    'title': '<────── Feeling ──────> ',
+                                    'showticklabels':False
                                 },
                                 'yaxis': {
-                                    'title': 'Arousal Score'
+                                    'title': '<────── Intensity  ──────> ',
+                                    'showticklabels':False
                                 },
                                 'annotations': [
                                 {
-                                    'x': 1.25,  # X-coordinate of the annotation
-                                    'y': 0.1,  # Y-coordinate of the annotation
-                                    'text': 'Happy',  # Text to display as the label
-                                    'showarrow': False,  # Hide the arrow
-                                    'font': {
-                                        'color': 'green',  # Color of the text
-                                        'size': 12  # Size of the text
-                                    }
-                                },
-                                {
-                                    'x': 1,  # X-coordinate of the annotation
-                                    'y': 1,  # Y-coordinate of the annotation
-                                    'text': 'Excited',  # Text to display as the label
-                                    'showarrow': False,  # Hide the arrow
-                                    'font': {
-                                        'color': 'orange',  # Color of the text
-                                        'size': 14  # Size of the text
-                                    }
-                                },
-                                {
-                                    'x': -1.25,  # X-coordinate of the annotation
-                                    'y': 0.1,  # Y-coordinate of the annotation
-                                    'text': 'Sad',  # Text to display as the label
-                                    'showarrow': False,  # Hide the arrow
-                                    'font': {
-                                        'color': 'grey',  # Color of the text
-                                        'size': 12  # Size of the text
-                                    }
-                                },
-                                {
-                                    'x': 0.15,  # X-coordinate of the annotation
-                                    'y': 1.25,  # Y-coordinate of the annotation
-                                    'text': 'Suprise',  # Text to display as the label
-                                    'showarrow': False,  # Hide the arrow
-                                    'font': {
-                                        'color': 'purple',  # Color of the text
-                                        'size': 12  # Size of the text
-                                    }
-                                },
-                                {
                                     'x': -1,  # X-coordinate of the annotation
                                     'y': 1,  # Y-coordinate of the annotation
-                                    'text': 'Angry',  # Text to display as the label
+                                    'text': 'Terrible',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
                                         'color': 'red',  # Color of the text
-                                        'size': 12  # Size of the text
+                                        'size': 16  # Size of the text
                                     }
                                 },
                                 {
                                     'x': -1,  # X-coordinate of the annotation
                                     'y': -1,  # Y-coordinate of the annotation
-                                    'text': 'Depressed',  # Text to display as the label
+                                    'text': 'Unsatisfactory',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
                                         'color': 'black',  # Color of the text
-                                        'size': 12  # Size of the text
+                                        'size': 16  # Size of the text
                                     }
                                 },
                                 {
                                     'x': 1,  # X-coordinate of the annotation
                                     'y': -1,  # Y-coordinate of the annotation
-                                    'text': 'Relaxed',  # Text to display as the label
+                                    'text': 'Okay',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
                                         'color': 'blue',  # Color of the text
-                                        'size': 12  # Size of the text
+                                        'size': 16  # Size of the text
                                     }
                                 },
                                 {
-                                    'x': 0.1,  # X-coordinate of the annotation
-                                    'y': -1.25,  # Y-coordinate of the annotation
-                                    'text': 'Quiet',  # Text to display as the label
+                                    'x': 1,  # X-coordinate of the annotation
+                                    'y': 1,  # Y-coordinate of the annotation
+                                    'text': 'Awesome',  # Text to display as the label
                                     'showarrow': False,  # Hide the arrow
                                     'font': {
-                                        'color': 'sand',  # Color of the text
-                                        'size': 12  # Size of the text
+                                        'color': 'green',  # Color of the text
+                                        'size': 16  # Size of the text
                                     }
                                 },
                         ]
@@ -231,7 +195,7 @@ app.layout = html.Div(
         ),
         dcc.Input(
             id='passcode',
-            type='text',
+            type='password',
             placeholder='Passcode Here',
             style={'marginBottom': '30px','marginLeft': '360px', 'width': '100px', 'height': '30px'}
         ),
@@ -281,19 +245,19 @@ app.layout = html.Div(
                 dcc.Graph(id='graph', figure=blank_fig(), style={'width': '800px', 'height': '500px'})
             ]
         ),
-        html.H3(children='Percentage of reviews in each Quadrant',hidden = True, id = 'table1_title'),
+        html.H3(children='Percentage of reviews in each quadrant',hidden = True, id = 'table1_title'),
         dash_table.DataTable(
             id='table1',
             columns=[],  
             data=[],
-            style_table={'width': '95%', 'marginLeft': '30px','marginRight': '30px'},
+            style_table={'width': '40%', 'marginLeft': '30px','marginRight': '30px'},
             style_cell={
                 'whiteSpace': 'normal',
                 'height': 'auto',
                 'text-align': 'left'
             },            
         ),
-        html.H3(children="Reviews and it's similarity to the categoty selected",hidden = True, id = 'table2_title'),
+        html.H3(children="Reviews and it's similarity to the category selected",hidden = True, id = 'table2_title'),
         dash_table.DataTable(
             id='table2',
             columns=[],
@@ -302,6 +266,7 @@ app.layout = html.Div(
             style_cell={
                 'whiteSpace': 'normal',
                 'height': 'auto',
+                'width' : 'auto',
                 'text-align': 'left'
             },            
         ),
