@@ -377,7 +377,7 @@ app.layout = html.Div(
                                         'display': 'inline-flex',
                                         'align-items': 'center',
                                         'width': '100px',
-                                        'height': '30px',
+                                        'height': '40px',
                                         'font-size': '18px',
                                         'border': 'none',
                                         'border-radius': '4px',
