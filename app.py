@@ -123,11 +123,13 @@ def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passco
                                 'height': 500,  # Set the height of the figure
                                 'xaxis': {
                                     'title': '<────── Feeling ──────> ',
-                                    'showticklabels': False
+                                    'showticklabels': False,
+                                    'color':'grey'
                                 },
                                 'yaxis': {
                                     'title': '<────── Intensity  ──────> ',
-                                    'showticklabels': False
+                                    'showticklabels': False,
+                                    'color':'grey'
                                 },
                                 'annotations': [
                                     {
@@ -371,7 +373,20 @@ app.layout = html.Div(
                     style={'width': '100%', 'alignItems': 'center'},
                     children=[
                         html.Button('Submit', id='submit-button', n_clicks=0,
-                                    style={'alignItems': 'center', 'display': 'flex'},
+                                        style={
+                                        'display': 'inline-flex',
+                                        'align-items': 'center',
+                                        'width': '100px',
+                                        'height': '30px',
+                                        'font-size': '18px',
+                                        'border': 'none',
+                                        'border-radius': '4px',
+                                        'background-color': '#007bff',
+                                        'color': '#ffffff',
+                                        'cursor': 'pointer',
+                                        'padding': '8px 20px',
+                                        'box-shadow': '0px 2px 4px rgba(0, 0, 0, 0.2)',
+                                    },
                                     disabled=True)]),
             ]
         ),
