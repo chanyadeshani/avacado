@@ -328,7 +328,7 @@ app.layout = html.Div(
                     style={'display': 'flex', 'marginBottom': '50px', 'width': '30%'},
                     children=[
                 html.Button('Submit', id='submit-button', n_clicks=0,
-                            style={'marginLeft': '50px', 'width': '70px', 'height': '30px',
+                            style={'marginLeft': '10px', 'width': '70px', 'height': '30px',
                                    'justifyContent': 'center', 'alignItems': 'center'},
                             disabled=True)]),
             ]
