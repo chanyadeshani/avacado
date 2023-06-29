@@ -16,16 +16,30 @@ app = dash.Dash(__name__)
 
 # Define the API endpoint URL
 url = 'https://nss-container-p57byuk3wa-uc.a.run.app/api/ask'
+url_categories = "https://nss-container-p57byuk3wa-uc.a.run.app/api/categories"
 df = pd.DataFrame()  # Initialize an empty DataFrame
 
 
-def make_api_request(query, noReviews):
+def make_api_request(query, noReviews,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value):
     payload = {
+        'school':school_dropdown_value,
+        'course_group':course_group_dropdown_value,
+        'subject':subject_dropdown_value,
         'query': query,
         'top_n': noReviews,
         'threshold': 0.75
     }
     response = requests.post(url, json=payload)
+    
+    if response.status_code == 200:
+        # Parse the response JSON data
+        data = response.json()
+
+        # Return the processed data
+        return data
+
+def get_categories():
+    response = requests.get(url_categories)
 
     if response.status_code == 200:
         # Parse the response JSON data
@@ -34,6 +48,7 @@ def make_api_request(query, noReviews):
         # Return the processed data
         return data
 
+categories = get_categories()
 
 @app.callback(
     [
@@ -50,6 +65,10 @@ def make_api_request(query, noReviews):
     [
         dash.dependencies.Input('submit-button', 'n_clicks'),
         dash.dependencies.Input('questions_dropdown', 'value'),
+        
+        dash.dependencies.Input('school_dropdown', 'value'),
+        dash.dependencies.Input('course_group_dropdown', 'value'),
+        dash.dependencies.Input('subject_dropdown', 'value'),
     ],
     [
         dash.dependencies.State('slider1', 'value'),
@@ -57,19 +76,22 @@ def make_api_request(query, noReviews):
 
     ]
 )
-def handle_button_click(n_clicks, questions_dropdown_value, slider_value, passcode_value):
-    ctx = dash.callback_context
 
+def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_value,course_group_dropdown_value, subject_dropdown_value, slider_value, passcode_value):
+    ctx = dash.callback_context
+    #print('check')
     if ctx.triggered:
         prop_id = ctx.triggered[0]['prop_id']
 
         if 'submit-button' in prop_id:
-
+            print("Submit", school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
             if n_clicks is not None and n_clicks > 0 and questions_dropdown_value and passcode_value == 'nss23@UOG':
                 # Call the make_api_request function with the input value
+                print('api' ,questions_dropdown_value, slider_value,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
                 api_response = make_api_request(
-                    questions_dropdown_value, slider_value)
+                    questions_dropdown_value, slider_value,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
 
+                print(api_response)
                 if api_response is not None:
                     # Extract the first child of the JSON object
                     reviews_data = api_response.get('reviews', [])
@@ -311,12 +333,13 @@ app.layout = html.Div(
                     style={'display': 'flex', 'align-items': 'center'},
                     children=[
                         dcc.Dropdown(
-                            options=['School of arts', 'Gloucestershire business school',
-                                     'School of computing and engineering',
-                                     'School of creative industries', 'School of education and humanities',
-                                     'School of health and social care', 'School of natural, social and sport science',
-                                     'Countryside and community research institute'],
-                            value='School of arts',
+                            # options=['School of arts', 'Gloucestershire business school',
+                            #          'School of computing and engineering',
+                            #          'School of creative industries', 'School of education and humanities',
+                            #          'School of health and social care', 'School of natural, social and sport science',
+                            #          'Countryside and community research institute'],
+                            options=categories['school'],
+                            value=categories['school'][0],
                             id='school_dropdown',
                             style={'width': '100%', 'max-width': '300px', 'display': 'block'}
                         )]
@@ -327,9 +350,23 @@ app.layout = html.Div(
                     style={'display': 'flex', 'align-items': 'center'},
                     children=[
                         dcc.Dropdown(
-                            options=['Subject 1', 'Subject 2', 'Subject 3'],
-                            value='Subject 1',
+                            # options=['Subject 1', 'Subject 2', 'Subject 3'],
+                            options=categories['subject'],
+                            value=categories['subject'][0],
                             id='subject_dropdown',
+                            style={'width': '100%', 'max-width': '300px', 'display': 'block'}
+                        )]
+                ),
+                html.H4(children='Course Group',
+                        style={'justifyContent': 'center', 'alignItems': 'center'}),
+                html.Div(
+                    style={'display': 'flex', 'align-items': 'center'},
+                    children=[
+                        dcc.Dropdown(
+                            # options=['Subject 1', 'Subject 2', 'Subject 3'],
+                            options=categories['course_group'],
+                            value=categories['course_group'][0],
+                            id='course_group_dropdown',
                             style={'width': '100%', 'max-width': '300px', 'display': 'block'}
                         )]
                 ),
