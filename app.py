@@ -79,19 +79,15 @@ categories = get_categories()
 
 def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_value,course_group_dropdown_value, subject_dropdown_value, slider_value, passcode_value):
     ctx = dash.callback_context
-    #print('check')
     if ctx.triggered:
         prop_id = ctx.triggered[0]['prop_id']
 
         if 'submit-button' in prop_id:
-            print("Submit", school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
             if n_clicks is not None and n_clicks > 0 and questions_dropdown_value and passcode_value == 'nss23@UOG':
                 # Call the make_api_request function with the input value
-                print('api' ,questions_dropdown_value, slider_value,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
                 api_response = make_api_request(
                     questions_dropdown_value, slider_value,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
 
-                print(api_response)
                 if api_response is not None :
                     # Extract the first child of the JSON object
                     reviews_data = api_response.get('reviews', [])
