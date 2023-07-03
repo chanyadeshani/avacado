@@ -92,120 +92,121 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                     questions_dropdown_value, slider_value,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value)
 
                 print(api_response)
-                if api_response is not None:
+                if api_response is not None :
                     # Extract the first child of the JSON object
                     reviews_data = api_response.get('reviews', [])
 
                     # Convert the first child to a DataFrame
                     df = pd.DataFrame(reviews_data)
+                    if df.size > 0:
                     # Create a new column 'Review_trimmed' with trimmed text if length is greater than 100, else use the original text
-                    df['Review_trimmed'] = df['Review'].apply(
-                        lambda x: x[:120] + '...' if len(x) > 120 else x)
-                    df_oct = pd.DataFrame(
-                        columns=['Quadrants', 'Percentage'], index=range(5))
-                    # Separate V-A scores to Quadrants
-                    percentage_ph = len(df[(df['valence_score'] > 0) & (
-                            df['arousal_score'] >= 0)]) / len(df)
-                    df_oct.loc[0] = ['Awesome \n(Positive feeling with High intensity)', str(
-                        round(percentage_ph * 100)) + '%']
+                        df['Review_trimmed'] = df['Review'].apply(
+                            lambda x: x[:120] + '...' if len(x) > 120 else x)
+                        df_oct = pd.DataFrame(
+                            columns=['Quadrants', 'Percentage'], index=range(5))
+                        # Separate V-A scores to Quadrants
+                        percentage_ph = len(df[(df['valence_score'] > 0) & (
+                                df['arousal_score'] >= 0)]) / len(df)
+                        df_oct.loc[0] = ['Awesome \n(Positive feeling with High intensity)', str(
+                            round(percentage_ph * 100)) + '%']
 
-                    percentage_pl = len(
-                        df[(df['valence_score'] > 0) & (df['arousal_score'] < 0)]) / len(df)
-                    df_oct.loc[1] = ['Okay \n(Positive feeling with Low intensity)', str(
-                        round(percentage_pl * 100)) + '%']
+                        percentage_pl = len(
+                            df[(df['valence_score'] > 0) & (df['arousal_score'] < 0)]) / len(df)
+                        df_oct.loc[1] = ['Okay \n(Positive feeling with Low intensity)', str(
+                            round(percentage_pl * 100)) + '%']
 
-                    percentage_nl = len(
-                        df[(df['valence_score'] < 0) & (df['arousal_score'] < 0)]) / len(df)
-                    df_oct.loc[2] = ['Unsatisfactory \n(Negative feeling with Low intensity)', str(
-                        round(percentage_nl * 100)) + '%']
+                        percentage_nl = len(
+                            df[(df['valence_score'] < 0) & (df['arousal_score'] < 0)]) / len(df)
+                        df_oct.loc[2] = ['Unsatisfactory \n(Negative feeling with Low intensity)', str(
+                            round(percentage_nl * 100)) + '%']
 
-                    percentage_nh = len(
-                        df[(df['valence_score'] < 0) & (df['arousal_score'] > 0)]) / len(df)
-                    df_oct.loc[3] = ['Terrible \n (Negative feeling with High intensity)', str(
-                        round(percentage_nh * 100)) + '%']
-                    percentage_nh = len(
-                        df[(df['valence_score'] == 0)]) / len(df)
-                    df_oct.loc[4] = ['Neutral', str(
-                        round(percentage_nh * 100)) + '%']
+                        percentage_nh = len(
+                            df[(df['valence_score'] < 0) & (df['arousal_score'] > 0)]) / len(df)
+                        df_oct.loc[3] = ['Terrible \n (Negative feeling with High intensity)', str(
+                            round(percentage_nh * 100)) + '%']
+                        percentage_nh = len(
+                            df[(df['valence_score'] == 0)]) / len(df)
+                        df_oct.loc[4] = ['Neutral', str(
+                            round(percentage_nh * 100)) + '%']
 
-                    return (
-                        {
-                            'data': [
-                                {
-                                    'x': df['valence_score'],
-                                    'y': df['arousal_score'],
-                                    'mode': 'markers',
-                                    'hovertext': df['Review_trimmed'],
-                                    'hoverinfo': df['Review_trimmed'],
-                                },
-                            ],
-                            'layout': {
-                                'title': 'Feeling and Intensity',
-                                'width': 800,  # Set the width of the figure
-                                'height': 500,  # Set the height of the figure
-                                'xaxis': {
-                                    'title': '<────── Feeling ──────> ',
-                                    'showticklabels': False,
-                                    'color':'grey'
-                                },
-                                'yaxis': {
-                                    'title': '<────── Intensity  ──────> ',
-                                    'showticklabels': False,
-                                    'color':'grey'
-                                },
-                                'annotations': [
+                        return (
+                            {
+                                'data': [
                                     {
-                                        'x': -1,  # X-coordinate of the annotation
-                                        'y': 1,  # Y-coordinate of the annotation
-                                        'text': 'Terrible',  # Text to display as the label
-                                        'showarrow': False,  # Hide the arrow
-                                        'font': {
-                                            'color': 'red',  # Color of the text
-                                            'size': 16  # Size of the text
-                                        }
+                                        'x': df['valence_score'],
+                                        'y': df['arousal_score'],
+                                        'mode': 'markers',
+                                        'hovertext': df['Review_trimmed'],
+                                        'hoverinfo': df['Review_trimmed'],
                                     },
-                                    {
-                                        'x': -1,  # X-coordinate of the annotation
-                                        'y': -1,  # Y-coordinate of the annotation
-                                        'text': 'Unsatisfactory',  # Text to display as the label
-                                        'showarrow': False,  # Hide the arrow
-                                        'font': {
-                                            'color': 'black',  # Color of the text
-                                            'size': 16  # Size of the text
-                                        }
+                                ],
+                                'layout': {
+                                    'title': 'Feeling and Intensity',
+                                    'width': 800,  # Set the width of the figure
+                                    'height': 500,  # Set the height of the figure
+                                    'xaxis': {
+                                        'title': '<────── Feeling ──────> ',
+                                        'showticklabels': False,
+                                        'color':'grey'
                                     },
-                                    {
-                                        'x': 1,  # X-coordinate of the annotation
-                                        'y': -1,  # Y-coordinate of the annotation
-                                        'text': 'Okay',  # Text to display as the label
-                                        'showarrow': False,  # Hide the arrow
-                                        'font': {
-                                            'color': 'blue',  # Color of the text
-                                            'size': 16  # Size of the text
-                                        }
+                                    'yaxis': {
+                                        'title': '<────── Intensity  ──────> ',
+                                        'showticklabels': False,
+                                        'color':'grey'
                                     },
-                                    {
-                                        'x': 1,  # X-coordinate of the annotation
-                                        'y': 1,  # Y-coordinate of the annotation
-                                        'text': 'Awesome',  # Text to display as the label
-                                        'showarrow': False,  # Hide the arrow
-                                        'font': {
-                                            'color': 'green',  # Color of the text
-                                            'size': 16  # Size of the text
-                                        }
-                                    },
-                                ]
-                            }
-                        },
-                        df_oct.to_dict('records'),
-                        [{"name": col, "id": col}
-                         for col in df_oct.columns[:2]],
-                        df.to_dict('records'),
-                        [{"name": col, "id": col} for col in df.columns[:2]],
-                        False,  # Enable the submit button
-                        False,
-                        False
-                    )
+                                    'annotations': [
+                                        {
+                                            'x': -1,  # X-coordinate of the annotation
+                                            'y': 1,  # Y-coordinate of the annotation
+                                            'text': 'Terrible',  # Text to display as the label
+                                            'showarrow': False,  # Hide the arrow
+                                            'font': {
+                                                'color': 'red',  # Color of the text
+                                                'size': 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            'x': -1,  # X-coordinate of the annotation
+                                            'y': -1,  # Y-coordinate of the annotation
+                                            'text': 'Unsatisfactory',  # Text to display as the label
+                                            'showarrow': False,  # Hide the arrow
+                                            'font': {
+                                                'color': 'black',  # Color of the text
+                                                'size': 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            'x': 1,  # X-coordinate of the annotation
+                                            'y': -1,  # Y-coordinate of the annotation
+                                            'text': 'Okay',  # Text to display as the label
+                                            'showarrow': False,  # Hide the arrow
+                                            'font': {
+                                                'color': 'blue',  # Color of the text
+                                                'size': 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            'x': 1,  # X-coordinate of the annotation
+                                            'y': 1,  # Y-coordinate of the annotation
+                                            'text': 'Awesome',  # Text to display as the label
+                                            'showarrow': False,  # Hide the arrow
+                                            'font': {
+                                                'color': 'green',  # Color of the text
+                                                'size': 16  # Size of the text
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            df_oct.to_dict('records'),
+                            [{"name": col, "id": col}
+                            for col in df_oct.columns[:2]],
+                            df.to_dict('records'),
+                            [{"name": col, "id": col} for col in df.columns[:2]],
+                            False,  # Enable the submit button
+                            False,
+                            False
+                        )
                 else:
                     return blank_fig(), [], [], [], [], True, True, True  # Disable the submit button
 
