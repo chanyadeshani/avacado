@@ -134,11 +134,11 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                         df_oct.loc[4] = ["Neutral", str(
                             round(percentage_nh * 100)) + "%"]
                         
-                        df_pvhi = df[(df["valence_score"] > 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
+                        df_pvhi = df[(df["valence_score"] > 0) & (df["arousal_score"] > 0)].sort_values(by=['arousal_score'], ascending=False)
                         df_pvli = df[(df["valence_score"] > 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
-                        df_nvli = df[(df["valence_score"] > 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
-                        df_nvhi = df[(df["valence_score"] > 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
-                        df_nu = df[(df["valence_score"] > 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
+                        df_nvli = df[(df["valence_score"] < 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
+                        df_nvhi = df[(df["valence_score"] < 0) & (df["arousal_score"] > 0)].sort_values(by=['arousal_score'], ascending=False)
+                        df_nu = df[(df["valence_score"] == 0)].sort_values(by=['arousal_score'], ascending=False)
 
                     
                         return (
