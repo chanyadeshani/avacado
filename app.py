@@ -132,7 +132,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                             round(percentage_nh * 100)) + "%"]
                         percentage_nh = len(
                             df[(df["valence_score"] == 0)]) / len(df)
-                        df_oct.loc[4] = ["Neutral", str(
+                        df_oct.loc[4] = ["Nothing stands out \n (Neutral feeling)", str(
                             round(percentage_nh * 100)) + "%"]
                         
                         df_pvhi = df[(df["valence_score"] > 0) & (df["arousal_score"] > 0)].sort_values(by=['arousal_score'], ascending=False)
