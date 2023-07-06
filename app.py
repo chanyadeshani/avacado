@@ -17,6 +17,8 @@ app = dash.Dash(__name__)
 # Define the API endpoint URL
 url = "https://nss-container-p57byuk3wa-uc.a.run.app/api/ask"
 url_categories = "https://nss-container-p57byuk3wa-uc.a.run.app/api/categories"
+options =[]
+course_options =[]
 
 def make_api_request(query, noReviews,school_dropdown_value,course_group_dropdown_value, subject_dropdown_value):
     payload = {
@@ -47,6 +49,7 @@ def get_categories():
         return data
 
 categories = get_categories()
+structure = categories["structure"]
 
 @app.callback(
     [
@@ -74,7 +77,6 @@ categories = get_categories()
     [
         dash.dependencies.Input("submit-button", "n_clicks"),
         dash.dependencies.Input("questions_dropdown", "value"),
-        
         dash.dependencies.Input("school_dropdown", "value"),
         dash.dependencies.Input("course_group_dropdown", "value"),
         dash.dependencies.Input("subject_dropdown", "value"),
@@ -82,7 +84,6 @@ categories = get_categories()
     [
         dash.dependencies.State("slider1", "value"),
         dash.dependencies.State("passcode", "value")
-
     ]
 )
 
@@ -139,7 +140,6 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                         df_nvli = df[(df["valence_score"] < 0) & (df["arousal_score"] < 0)].sort_values(by=['arousal_score'], ascending=False)
                         df_nvhi = df[(df["valence_score"] < 0) & (df["arousal_score"] > 0)].sort_values(by=['arousal_score'], ascending=False)
                         df_nu = df[(df["valence_score"] == 0)].sort_values(by=['arousal_score'], ascending=False)
-
                     
                         return (
                             {
@@ -223,7 +223,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                             df_nu.to_dict("records"), # nutral table
                             [{"name": col, "id": col} for col in df_nu.columns[:2]],
                             False,  # Enable the submit button
-                            False,
+                            False, # Show table titles
                             False,
                             False,
                             False,
@@ -244,6 +244,33 @@ def blank_fig():
 
     return fig
 
+@app.callback(
+    dash.dependencies.Output('subject_dropdown', 'options'),
+    [dash.dependencies.Input('school_dropdown', 'value')]
+)
+def update_subject_dropdown(selected_value):
+    school_list = list(structure.keys())
+    if selected_value in school_list:
+        options = list(structure[selected_value].keys())
+    
+    else:
+        options = [] 
+
+    return options
+       
+@app.callback(
+    dash.dependencies.Output('course_group_dropdown', 'options'),
+     [dash.dependencies.Input('school_dropdown', 'value'),
+        dash.dependencies.Input('subject_dropdown', 'value')]
+)
+def update_subject_dropdown(school,subject):
+    course_options = []
+    if school:
+        course_list = list(structure[school].keys())
+        if subject and subject in course_list:
+            course_options = structure[school][subject]["course_group"]
+
+    return course_options
 
 app.layout = html.Div(
     children=[
@@ -356,8 +383,7 @@ app.layout = html.Div(
                     style={"display": "flex", "align-items": "center"},
                     children=[
                         dcc.Dropdown(
-                            options=[{"label": x, "value": x} for x in sorted(categories["school"])],
-                            value=categories["school"][0],
+                            options=[{"label": x, "value": x} for x in sorted(structure.keys())],
                             id="school_dropdown",
                             style={"width": "100%", "max-width": "300px", "display": "block"}
                         )]
@@ -368,8 +394,9 @@ app.layout = html.Div(
                     style={"display": "flex", "align-items": "center"},
                     children=[
                         dcc.Dropdown(
-                            options=[{"label": x, "value": x} for x in sorted(categories["subject"])],
-                            value=categories["subject"][0],
+                            options=options,
+                            value=options[0]['value'] if options else None,
+                            #placeholder = "Select a School First",
                             id="subject_dropdown",
                             style={"width": "100%", "max-width": "300px", "display": "block"}
                         )]
@@ -380,15 +407,15 @@ app.layout = html.Div(
                     style={"display": "flex", "align-items": "center"},
                     children=[
                         dcc.Dropdown(
-                            options=[{"label": x, "value": x} for x in sorted(categories["course_group"])],
-                            value=categories["course_group"][0],
+                            options=course_options,
+                            value=options[0]['value'] if options else None,
                             id="course_group_dropdown",
                             style={"width": "100%", "max-width": "300px", "display": "block"}
                         )]
                 ),
                 html.H4(
                     children="Category",
-                    style={}
+                    style={"justifyContent": "center", "alignItems": "center"}
                 ),
                 html.Div(
                     style={"display": "flex", "align-items": "center"},
