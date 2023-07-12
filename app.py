@@ -157,7 +157,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                                     },
                                 ],
                                 "layout": {
-                                    "title": '<b>Average "Feeling" and "Intensity" scores for each course <b> <br><sup>Hoverover to see the course title</sup>',
+                                    "title": '<b>Visualisation of Courses<b> <br><br><sup>Hoverover to see the course title</sup>',
                                     "width": 800,  # Set the width of the figure
                                     "height": 500,  # Set the height of the figure
                                     "xaxis": {
@@ -225,7 +225,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                                     },
                                 ],
                                 "layout": {
-                                    "title": "Feeling and Intensity of each review for the selected course",
+                                    "title": "Visualisation of NSS Question",
                                     "width": 800,  # Set the width of the figure
                                     "height": 500,  # Set the height of the figure
                                     "xaxis": {
@@ -486,7 +486,7 @@ app.layout = html.Div(
                         )]
                 ),
                 html.H4(
-                    children="Category",
+                    children="NSS Question",
                     style={"justifyContent": "center", "alignItems": "center"}
                 ),
                 html.Div(
