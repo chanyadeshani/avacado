@@ -68,6 +68,7 @@ structure = categories["structure"]
         dash.dependencies.Output("table_nutral", "data"),
         dash.dependencies.Output("table_nutral", "columns"),
         dash.dependencies.Output("submit-button", "disabled"),
+        dash.dependencies.Output("table1_title", "hidden"),
         dash.dependencies.Output("table_awesome_title", "hidden"),
         dash.dependencies.Output("table_ok_title", "hidden"),
         dash.dependencies.Output("table_unsatis_title", "hidden"),
@@ -299,13 +300,14 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                             False,
                             False,
                             False,
+                            False,
                             False
                         )
                 else:
-                    return blank_fig(),blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], True, True, True, True, True,True  # Disable the submit button
+                    return blank_fig(),blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], True, True,True, True, True, True,True  # Disable the submit button
 
     # Disable the submit button if the input value is empty
-    return blank_fig(), blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], not bool(questions_dropdown_value), True, True,True, True,True
+    return blank_fig(), blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], not bool(questions_dropdown_value), True,True, True,True, True,True
 
 
 def blank_fig():
@@ -561,18 +563,11 @@ app.layout = html.Div(
             style={"display": "flex", "align-items": "center",
                    "justify-content": "center"},
             children=[
-                dcc.Graph(id="course_graph", figure=blank_fig(), style={
-                    "width": "800px", "height": "500px"})
-            ]
-        ),
-        html.Div(
-            style={"display": "flex", "align-items": "center",
-                   "justify-content": "center"},
-            children=[
                 dcc.Graph(id="graph", figure=blank_fig(), style={
                     "width": "800px", "height": "500px"})
             ]
         ),
+
         html.H3(children="Percentage of reviews in each quadrant",
                 hidden=True, id="table1_title",style={"margin-left": "30px"}),
         dash_table.DataTable(
@@ -661,7 +656,15 @@ app.layout = html.Div(
                 "width": "auto",
                 "text-align": "left"
             },
-        )
+        ),
+        html.Div(
+            style={"display": "flex", "align-items": "center",
+                   "justify-content": "center"},
+            children=[
+                dcc.Graph(id="course_graph", figure=blank_fig(), style={
+                    "width": "800px", "height": "500px"})
+            ]
+        ),
     ]
 )
 
