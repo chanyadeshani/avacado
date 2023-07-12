@@ -53,6 +53,7 @@ structure = categories["structure"]
 
 @app.callback(
     [
+        dash.dependencies.Output("course_graph", "figure"),
         dash.dependencies.Output("graph", "figure"),
         dash.dependencies.Output("table1", "data"),
         dash.dependencies.Output("table1", "columns"),
@@ -101,9 +102,13 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                 if api_response is not None :
                     # Extract the first child of the JSON object
                     reviews_data = api_response.get("reviews", [])
-
+                    course_data = api_response.get("reviews_avg_course", [])
                     # Convert the first child to a DataFrame
                     df = pd.DataFrame(reviews_data)
+
+                    # Average VA values for cources
+                    course_df = pd.DataFrame(course_data)
+
                     if df.size > 0:
                     # Create a new column "Review_trimmed" with trimmed text if length is greater than 100, else use the original text
                         df["Review_trimmed"] = df["Review"].apply(
@@ -145,6 +150,73 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                             {
                                 "data": [
                                     {
+                                        "x": course_df["valence_score"],
+                                        "y": course_df["arousal_score"], 
+                                        "mode": "markers",
+                                        "text":course_df["CourseGroupExt"]
+                                    },
+                                ],
+                                "layout": {
+                                    "title": '<b>Average "Feeling" and "Intensity" scores for each course <b> <br><sup>Hoverover to see the course title</sup>',
+                                    "width": 800,  # Set the width of the figure
+                                    "height": 500,  # Set the height of the figure
+                                    "xaxis": {
+                                        "title": "<────── Feeling ──────> ",
+                                        "showticklabels": False,
+                                        "color":"grey"
+                                    },
+                                    "yaxis": {
+                                        "title": "<────── Intensity  ──────> ",
+                                        "showticklabels": False,
+                                        "color":"grey"
+                                    },
+                                    "annotations": [
+                                        {
+                                            "x": -1,  # X-coordinate of the annotation
+                                            "y": 1,  # Y-coordinate of the annotation
+                                            "text": "Terrible",  # Text to display as the label
+                                            "showarrow": False,  # Hide the arrow
+                                            "font": {
+                                                "color": "red",  # Color of the text
+                                                "size": 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            "x": -1,  # X-coordinate of the annotation
+                                            "y": -1,  # Y-coordinate of the annotation
+                                            "text": "Unsatisfactory",  # Text to display as the label
+                                            "showarrow": False,  # Hide the arrow
+                                            "font": {
+                                                "color": "black",  # Color of the text
+                                                "size": 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            "x": 1,  # X-coordinate of the annotation
+                                            "y": -1,  # Y-coordinate of the annotation
+                                            "text": "Okay",  # Text to display as the label
+                                            "showarrow": False,  # Hide the arrow
+                                            "font": {
+                                                "color": "blue",  # Color of the text
+                                                "size": 16  # Size of the text
+                                            }
+                                        },
+                                        {
+                                            "x": 1,  # X-coordinate of the annotation
+                                            "y": 1,  # Y-coordinate of the annotation
+                                            "text": "Awesome",  # Text to display as the label
+                                            "showarrow": False,  # Hide the arrow
+                                            "font": {
+                                                "color": "green",  # Color of the text
+                                                "size": 16  # Size of the text
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                "data": [
+                                    {
                                         "x": df["valence_score"],
                                         "y": df["arousal_score"],
                                         "mode": "markers",
@@ -153,7 +225,7 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                                     },
                                 ],
                                 "layout": {
-                                    "title": "Feeling and Intensity",
+                                    "title": "Feeling and Intensity of each review for the selected course",
                                     "width": 800,  # Set the width of the figure
                                     "height": 500,  # Set the height of the figure
                                     "xaxis": {
@@ -230,10 +302,10 @@ def handle_button_click(n_clicks, questions_dropdown_value, school_dropdown_valu
                             False
                         )
                 else:
-                    return blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], True, True, True, True, True,True  # Disable the submit button
+                    return blank_fig(),blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], True, True, True, True, True,True  # Disable the submit button
 
     # Disable the submit button if the input value is empty
-    return blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], not bool(questions_dropdown_value), True, True,True, True,True
+    return blank_fig(), blank_fig(), [], [], [], [], [], [], [], [], [], [], [], [], not bool(questions_dropdown_value), True, True,True, True,True
 
 
 def blank_fig():
@@ -483,6 +555,14 @@ app.layout = html.Div(
                                         "box-shadow": "0px 2px 4px rgba(0, 0, 0, 0.2)",
                                     },
                                     disabled=True)]),
+            ]
+        ),
+        html.Div(
+            style={"display": "flex", "align-items": "center",
+                   "justify-content": "center"},
+            children=[
+                dcc.Graph(id="course_graph", figure=blank_fig(), style={
+                    "width": "800px", "height": "500px"})
             ]
         ),
         html.Div(
