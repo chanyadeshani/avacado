@@ -1,16 +1,12 @@
 import pandas as pd
 import os
-import numpy as np
 import requests
-import json
 import dash
 from dash import dash_table
 from dash import dcc
 from dash import html
 import plotly.graph_objects as go
 import dash_daq as daq
-
-# import dash_bootstrap_components as dbc
 
 app = dash.Dash(__name__)
 
@@ -703,4 +699,4 @@ app.layout = html.Div(
 
 if __name__ == "__main__":
     PORT = os.getenv("PORT", 8080)
-    app.run_server(debug=True, port=PORT, host="0.0.0.0")
+    app.run_server(debug=False, port=PORT, host="0.0.0.0")
